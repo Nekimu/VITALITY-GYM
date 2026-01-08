@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Vitality Gym</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-login {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        .logo-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        .error-message {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen flex items-center justify-center px-6">
+        <div class="login-container w-full max-w-md">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="flex justify-center mb-4">
+                    <i class="fas fa-dumbbell text-5xl text-blue-500 logo-animation"></i>
+                </div>
+                <h1 class="text-4xl font-black text-white tracking-wider mb-2">
+                    Vitality <span class="text-blue-500">Gym</span>
+                </h1>
+                <p class="text-gray-400 text-sm">Panel de Administración</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="bg-gray-900 rounded-xl shadow-2xl p-8 border border-gray-800">
+                <h2 class="text-2xl font-bold text-white mb-6 text-center">
+                    <i class="fas fa-lock text-blue-500 mr-2"></i> Acceso Admin
+                </h2>
+
+                <!-- Error Message -->
+                <div id="error-message" class="hidden mb-4 p-4 bg-red-900 border border-red-700 rounded-lg">
+                    <p class="text-red-300 text-sm flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <span id="error-text"></span>
+                    </p>
+                </div>
+
+                <form id="login-form" novalidate>
+                    <!-- Username Field -->
+                    <div class="mb-6">
+                        <label for="username" class="block text-sm font-semibold text-gray-300 mb-3">
+                            <i class="fas fa-user text-blue-500 mr-2"></i>Usuario
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username"
+                            placeholder="Ingresa tu usuario" 
+                            class="input-field w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-semibold text-gray-300 mb-3">
+                            <i class="fas fa-lock text-blue-500 mr-2"></i>Contraseña
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                placeholder="Ingresa tu contraseña" 
+                                class="input-field w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button 
+                                type="button" 
+                                id="toggle-password" 
+                                class="absolute right-3 top-3 text-gray-500 hover:text-gray-300 transition"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="mb-6 flex items-center">
+                        <input 
+                            type="checkbox" 
+                            id="remember" 
+                            name="remember"
+                            class="w-4 h-4 rounded bg-gray-800 border-gray-700 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        >
+                        <label for="remember" class="ml-2 text-sm text-gray-400 cursor-pointer">
+                            Recuerda mi usuario
+                        </label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button 
+                        type="submit" 
+                        class="btn-login w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 rounded-lg transition shadow-lg"
+                    >
+                        <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+                    </button>
+
+                    <!-- Back Button -->
+                    <a 
+                        href="index_GYM.html" 
+                        class="block w-full mt-4 text-center px-4 py-3 border border-gray-700 text-gray-300 font-semibold rounded-lg hover:bg-gray-800 transition"
+                    >
+                        <i class="fas fa-arrow-left mr-2"></i>Volver
+                    </a>
+                </form>
+            </div>
+
+            <!-- Footer Info -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-500 text-xs">
+                    <i class="fas fa-shield-alt text-green-500 mr-1"></i>
+                    Conexión segura - Solo para administradores
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordField = document.getElementById('password');
+
+        if (togglePassword) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordField.type === 'password' ? 'text' : 'password';
+                passwordField.type = type;
+                togglePassword.innerHTML = type === 'password' 
+                    ? '<i class="fas fa-eye"></i>' 
+                    : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+
+        // Login form handler
+        const loginForm = document.getElementById('login-form');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const usernameField = document.getElementById('username');
+        const passwordField_form = document.getElementById('password');
+
+        // Load saved username if "Remember me" was checked
+        window.addEventListener('load', () => {
+            const savedUsername = localStorage.getItem('admin_username');
+            const rememberCheckbox = document.getElementById('remember');
+            if (savedUsername) {
+                usernameField.value = savedUsername;
+                rememberCheckbox.checked = true;
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.classList.add('hidden');
+
+            const username = usernameField.value.trim();
+            const password = passwordField_form.value;
+            const rememberMe = document.getElementById('remember').checked;
+
+            // Validation
+            if (!username || !password) {
+                showError('Por favor completa todos los campos');
+                return;
+            }
+
+            // Simple client-side validation (for development)
+            // En producción, esto debe validarse en el servidor
+            const adminUser = 'admin';
+            const adminPassword = '1234';
+
+            if (username === adminUser && password === adminPassword) {
+                // Save username if "Remember me" is checked
+                if (rememberMe) {
+                    localStorage.setItem('admin_username', username);
+                } else {
+                    localStorage.removeItem('admin_username');
+                }
+
+                // Create session
+                sessionStorage.setItem('admin_logged_in', 'true');
+                sessionStorage.setItem('admin_user', username);
+                sessionStorage.setItem('admin_session_time', new Date().getTime());
+
+                // Redirect to admin panel
+                window.location.href = 'admin-panel.html';
+            } else {
+                showError('Usuario o contraseña incorrectos');
+                passwordField_form.value = '';
+                passwordField_form.focus();
+            }
+        });
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            errorMessage.classList.add('error-message');
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+                errorMessage.classList.remove('error-message');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

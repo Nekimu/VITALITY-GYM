@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Pago Exitoso - Vitality Gym</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="antialiased bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-gray-800 rounded-lg shadow-2xl p-8 text-center">
+            <!-- Ícono de éxito -->
+            <div class="mb-6">
+                <div class="inline-block p-4 bg-green-500 bg-opacity-20 rounded-full">
+                    <i class="fas fa-check-circle text-5xl text-green-500"></i>
+                </div>
+            </div>
+
+            <!-- Título -->
+            <h1 class="text-3xl font-bold mb-4">¡Pago Exitoso!</h1>
+
+            <!-- Mensaje -->
+            <p class="text-gray-400 mb-6">
+                Tu inscripción a <strong>Vitality Gym</strong> ha sido completada exitosamente. Recibirás un correo de confirmación con los detalles de tu membresía.
+            </p>
+
+            <!-- ID de Transacción -->
+            <div class="bg-gray-700 p-4 rounded-lg mb-6">
+                <p class="text-sm text-gray-400 mb-1">ID de Transacción:</p>
+                <p id="payment-id" class="text-lg font-mono text-green-400">Cargando...</p>
+            </div>
+
+            <!-- Detalles de Membresía -->
+            <div class="bg-gray-700 p-4 rounded-lg mb-6 text-left">
+                <p class="text-sm text-gray-400 mb-2">📋 Tu Membresía:</p>
+                <ul id="membership-details" class="text-sm space-y-1 text-gray-300">
+                    <li>• Plan: <span id="plan-name">Cargando...</span></li>
+                    <li>• Correo: <span id="member-email">Cargando...</span></li>
+                    <li>• Inicio: <span id="start-date">Hoy</span></li>
+                </ul>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex gap-3">
+                <a href="/" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-home"></i> Ir a Inicio
+                </a>
+                <button onclick="window.print()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+
+            <!-- Pie de página -->
+            <p class="text-xs text-gray-500 mt-6">
+                <i class="fas fa-lock text-green-500"></i> Transacción segura realizada a través de Mercado Pago
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Obtener información de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id') || 'No disponible';
+        const status = urlParams.get('status') || 'approved';
+        const externalReference = urlParams.get('external_reference') || '';
+
+        // Mostrar ID de pago
+        document.getElementById('payment-id').textContent = paymentId;
+
+        // Extraer información del localStorage si fue guardada
+        const inscriptionData = JSON.parse(localStorage.getItem('last_inscription') || '{}');
+        
+        document.getElementById('plan-name').textContent = inscriptionData.plan ? inscriptionData.plan.toUpperCase() : 'Estándar';
+        document.getElementById('member-email').textContent = inscriptionData.email || 'usuario@gmail.com';
+        
+        const today = new Date();
+        document.getElementById('start-date').textContent = today.toLocaleDateString('es-AR');
+
+        // Log de confirmación
+        console.log('✅ Pago confirmado:', {
+            paymentId,
+            status,
+            externalReference,
+            inscriptionData
+        });
+    </script>
+</body>
+</html>

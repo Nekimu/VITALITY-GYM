@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Vitality Gym</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="admin-panel.css">
+
+</head>
+
+<body class="antialiased">
+    <!-- Mobile Menu Button -->
+    <button id="menu-toggle"
+        class="fixed bottom-8 right-8 md:hidden bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg z-40 transition">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="sidebar w-64 bg-gray-900 border-r border-gray-800 flex flex-col fixed md:relative h-full z-30 md:z-0">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-800">
+                <div class="flex items-center justify-center mb-3">
+                    <i class="fas fa-dumbbell text-3xl text-blue-500"></i>
+                </div>
+                <h1 class="text-xl font-black text-white text-center">
+                    Vitality <span class="text-blue-500">Gym</span>
+                </h1>
+                <p class="text-gray-500 text-xs text-center mt-1">Admin Panel</p>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <button
+                    class="nav-item active w-full text-left px-4 py-3 text-gray-300 hover:text-white rounded-lg border-l-4 border-l-blue-600 flex items-center transition"
+                    data-section="usuarios">
+                    <i class="fas fa-users text-blue-500 mr-3 w-5"></i>
+                    <span class="font-semibold">Usuarios</span>
+                </button>
+
+                <button
+                    class="nav-item w-full text-left px-4 py-3 text-gray-400 hover:text-gray-300 rounded-lg border-l-4 border-l-gray-800 flex items-center transition"
+                    data-section="inscripciones">
+                    <i class="fas fa-clipboard-list text-gray-500 mr-3 w-5"></i>
+                    <span class="font-semibold">Inscripciones</span>
+                </button>
+
+                <button
+                    class="nav-item w-full text-left px-4 py-3 text-gray-400 hover:text-gray-300 rounded-lg border-l-4 border-l-gray-800 flex items-center transition"
+                    data-section="estadisticas">
+                    <i class="fas fa-chart-bar text-gray-500 mr-3 w-5"></i>
+                    <span class="font-semibold">Estadísticas</span>
+                </button>
+            </nav>
+
+            <!-- User Info & Logout -->
+            <div class="p-4 border-t border-gray-800">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center flex-1">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-shield text-white"></i>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="text-white text-sm font-semibold" id="admin-username">Admin</p>
+                            <p class="text-gray-500 text-xs">Administrador</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="logout-btn"
+                    class="w-full bg-red-900 hover:bg-red-800 text-red-200 py-2 px-3 rounded-lg text-sm font-semibold transition flex items-center justify-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto bg-gradient-to-b from-gray-900 to-gray-950 md:ml-0">
+            <!-- Top Bar -->
+            <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-20">
+                <div class="px-6 py-4 flex items-center justify-between">
+                    <div>
+                        <h2 id="page-title" class="text-2xl font-bold text-white">Usuarios</h2>
+                        <p id="page-subtitle" class="text-gray-400 text-sm">Gestión de usuarios del sistema</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">
+                            <i class="fas fa-clock text-blue-500 mr-1"></i>
+                            <span id="current-time"></span>
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="p-6">
+                <!-- Loading State -->
+                <div id="loading-state" class="hidden">
+                    <div class="flex justify-center items-center h-96">
+                        <div class="text-center">
+                            <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+                            <p class="text-gray-400">Cargando datos...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usuarios Section -->
+                <section id="usuarios-section" class="visible">
+                    <div class="bg-gray-900 rounded-xl border border-gray-800 shadow-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-users text-blue-500 text-xl mr-3"></i>
+                                <h3 class="text-lg font-bold text-white">Lista de Usuarios</h3>
+                            </div>
+                            <button id="add-user-btn"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center">
+                                <i class="fas fa-plus mr-2"></i>Nuevo Usuario
+                            </button>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="px-6 py-4 border-b border-gray-800">
+                            <input type="text" id="search-usuarios" placeholder="Buscar usuario..."
+                                class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500">
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-800 border-b border-gray-700">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            ID</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Nombre</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Email</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Teléfono</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Estado</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuarios-table-body">
+                                    <!-- Rows will be inserted here -->
+                                </tbody>
+                            </table>
+                            <div id="no-usuarios" class="text-center py-8 text-gray-500">
+                                <i class="fas fa-inbox text-3xl mb-2 block opacity-50"></i>
+                                <p>No hay usuarios para mostrar</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Inscripciones Section -->
+                <section id="inscripciones-section" class="hidden">
+                    <div class="bg-gray-900 rounded-xl border border-gray-800 shadow-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-clipboard-list text-blue-500 text-xl mr-3"></i>
+                                <h3 class="text-lg font-bold text-white">Lista de Inscripciones</h3>
+                            </div>
+                            <div id="inscripcion-count"
+                                class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-sm font-semibold">
+                                0 registros
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="px-6 py-4 border-b border-gray-800">
+                            <input type="text" id="search-inscripciones" placeholder="Buscar inscripción..."
+                                class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500">
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-800 border-b border-gray-700">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            ID</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Usuario</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Email</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Membresía</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Fecha</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Estado</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                            Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inscripciones-table-body">
+                                    <!-- Rows will be inserted here -->
+                                </tbody>
+                            </table>
+                            <div id="no-inscripciones" class="text-center py-8 text-gray-500">
+                                <i class="fas fa-inbox text-3xl mb-2 block opacity-50"></i>
+                                <p>No hay inscripciones para mostrar</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Estadísticas Section -->
+                <section id="estadisticas-section" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <!-- Total Usuarios -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400 text-sm font-semibold mb-1">Total Usuarios</p>
+                                    <p class="text-3xl font-bold text-white" id="stat-usuarios">0</p>
+                                </div>
+                                <div class="bg-blue-900 rounded-full p-3">
+                                    <i class="fas fa-users text-blue-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Inscripciones -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400 text-sm font-semibold mb-1">Total Inscripciones</p>
+                                    <p class="text-3xl font-bold text-white" id="stat-inscripciones">0</p>
+                                </div>
+                                <div class="bg-green-900 rounded-full p-3">
+                                    <i class="fas fa-clipboard-list text-green-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Usuarios Activos -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400 text-sm font-semibold mb-1">Usuarios Activos</p>
+                                    <p class="text-3xl font-bold text-white" id="stat-activos">0</p>
+                                </div>
+                                <div class="bg-green-900 rounded-full p-3">
+                                    <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Usuarios Inactivos -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400 text-sm font-semibold mb-1">Usuarios Inactivos</p>
+                                    <p class="text-3xl font-bold text-white" id="stat-inactivos">0</p>
+                                </div>
+                                <div class="bg-red-900 rounded-full p-3">
+                                    <i class="fas fa-times-circle text-red-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Summary -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Últimas Inscripciones -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <h3 class="text-lg font-bold text-white mb-4">
+                                <i class="fas fa-history text-blue-500 mr-2"></i>Últimas Inscripciones
+                            </h3>
+                            <div id="recent-inscripciones" class="space-y-3">
+                                <!-- Will be populated -->
+                            </div>
+                        </div>
+
+                        <!-- Sistema Info -->
+                        <div class="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                            <h3 class="text-lg font-bold text-white mb-4">
+                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>Información del Sistema
+                            </h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Estado API</span>
+                                    <span id="api-status" class="flex items-center">
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                        <span class="text-green-400">Conectado</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between border-t border-gray-800 pt-3">
+                                    <span class="text-gray-400">Última Actualización</span>
+                                    <span id="last-update" class="text-gray-300">Ahora</span>
+                                </div>
+                                <div class="flex justify-between border-t border-gray-800 pt-3">
+                                    <span class="text-gray-400">Hora del Sistema</span>
+                                    <span id="system-time" class="text-gray-300">--:--:--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- MODALES -->
+
+    <!-- Modal: Crear/Editar Usuario -->
+    <div id="modal-usuario" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-usuario-title">Nuevo Usuario</h2>
+                <button class="modal-close" onclick="cerrarModalUsuario()">&times;</button>
+            </div>
+
+            <form onsubmit="guardarUsuario(event)">
+                <input type="hidden" id="usuario-id" value="">
+                <div class="form-group">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" id="usuario-nombre" class="form-input" placeholder="Ej: Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Edad *</label>
+                    <input type="number" id="usuario-edad" class="form-input" placeholder="Ej: 30" required min="1"
+                        max="120">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Peso (kg) *</label>
+                    <input type="number" id="usuario-peso" class="form-input" placeholder="Ej: 75.5" required step="0.1"
+                        min="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Talla (m) *</label>
+                    <input type="number" id="usuario-talla" class="form-input" placeholder="Ej: 1.80" required
+                        step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Membresía *</label>
+                    <select id="usuario-membresia" class="form-input" required>
+                        <option value="">Selecciona una membresía</option>
+                        <option value="basico">Básico</option>
+                        <option value="plus">Plus</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="cerrarModalUsuario()">Cancelar</button>
+                    <button type="submit" class="btn-submit" id="btn-guardar-usuario">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Inscripción -->
+    <div id="modal-inscripcion" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Inscripción</h2>
+                <button class="modal-close" onclick="cerrarModalInscripcion()">&times;</button>
+            </div>
+
+            <form onsubmit="guardarInscripcion(event)">
+                <input type="hidden" id="inscripcion-id" value="">
+                <div class="form-group">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" id="inscripcion-nombre" class="form-input" placeholder="Ej: Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Correo *</label>
+                    <input type="email" id="inscripcion-correo" class="form-input" placeholder="Ej: juan@example.com"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Teléfono *</label>
+                    <input type="tel" id="inscripcion-telefono" class="form-input" placeholder="Ej: 555-1234" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Membresía *</label>
+                    <select id="inscripcion-planes" class="form-input" required>
+                        <option value="">Selecciona una membresía</option>
+                        <option value="basico">Básico</option>
+                        <option value="plus">Plus</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="cerrarModalInscripcion()">Cancelar</button>
+                    <button type="submit" class="btn-submit" id="btn-guardar-inscripcion">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="admin-panel.js" type="module"></script>
+</body>
+
+</html>

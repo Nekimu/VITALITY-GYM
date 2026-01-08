@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❌ Pago Fallido - Vitality Gym</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="antialiased bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-gray-800 rounded-lg shadow-2xl p-8 text-center">
+            <!-- Ícono de error -->
+            <div class="mb-6">
+                <div class="inline-block p-4 bg-red-500 bg-opacity-20 rounded-full">
+                    <i class="fas fa-times-circle text-5xl text-red-500"></i>
+                </div>
+            </div>
+
+            <!-- Título -->
+            <h1 class="text-3xl font-bold mb-4">Pago Rechazado</h1>
+
+            <!-- Mensaje -->
+            <p class="text-gray-400 mb-6">
+                Lamentablemente, tu pago no pudo ser procesado. Por favor verifica tu información y vuelve a intentar.
+            </p>
+
+            <!-- Razones posibles -->
+            <div class="bg-gray-700 p-4 rounded-lg mb-6 text-left">
+                <p class="text-sm text-gray-300 font-semibold mb-2">🔍 Posibles razones:</p>
+                <ul class="text-sm text-gray-400 space-y-1 list-disc list-inside">
+                    <li>Fondos insuficientes</li>
+                    <li>Datos de tarjeta incorrectos</li>
+                    <li>Tarjeta vencida</li>
+                    <li>Bloqueo de seguridad del banco</li>
+                </ul>
+            </div>
+
+            <!-- Código de error -->
+            <div class="bg-gray-700 p-4 rounded-lg mb-6">
+                <p class="text-xs text-gray-400 mb-1">ID de Transacción:</p>
+                <p id="payment-id" class="text-sm font-mono text-red-400">No disponible</p>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-col gap-3">
+                <a href="/#registro" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-redo"></i> Intentar Nuevamente
+                </a>
+                <a href="/" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+                <a href="/#contacto" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
+                    <i class="fas fa-headset"></i> Contactar Soporte
+                </a>
+            </div>
+
+            <!-- Pie de página -->
+            <p class="text-xs text-gray-500 mt-6">
+                <i class="fas fa-info-circle"></i> Si el problema persiste, contacta con nuestro equipo de soporte
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Obtener información de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id') || 'No disponible';
+        const status = urlParams.get('status') || 'rejected';
+
+        document.getElementById('payment-id').textContent = paymentId;
+
+        console.log('❌ Pago rechazado:', {
+            paymentId,
+            status
+        });
+    </script>
+</body>
+</html>

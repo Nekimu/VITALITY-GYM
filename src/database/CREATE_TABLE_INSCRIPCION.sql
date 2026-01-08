@@ -1,0 +1,11 @@
+
+
+CREATE TABLE Inscripcion (
+  ID INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre VARCHAR(100) NOT NULL,
+  Correo VARCHAR(100) NOT NULL,
+  Telefono VARCHAR(20),
+  Planes VARCHAR(50),
+  FechaRegistro DATETIME DEFAULT GETDATE()
+);
+
