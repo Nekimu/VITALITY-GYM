@@ -54,9 +54,3 @@ Para servir las vistas interactivas del sistema:
 - Ejecuta `npm install` para instalar dependencias de Express y Node.
 - Levanta el servidor con `npm start` o `node src/app.js`.
 
-## 📦 Buenas Prácticas y GitHub
-
-El proyecto está estructurado con las siguientes buenas prácticas para protegerlo durante subidas a repositorios públicos:
-- **Cero credenciales quemadas**: Todos los "secrets", strings de SQL y contraseñas de admin migrados a configuración local o `IConfiguration` en el Backend de C#.
-- **Estructura Pública**: Los archivos UI aislados y servidos directamente desde `src/public`.
-- Archivos `.log`, carpetas `.vs` o `node_modules` no se envían al control de fuentes.
