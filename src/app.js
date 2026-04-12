@@ -21,8 +21,8 @@ app.use(express.json());
 // Definir __dirname para ES Modules
 const __dirname = path.resolve();
 
-// Servir archivos estáticos desde la carpeta 'src'
-app.use(express.static(path.join(__dirname, 'src')));
+// Servir archivos estáticos desde la carpeta 'src/public'
+app.use(express.static(path.join(__dirname, 'src', 'public')));
 
 // --- RUTAS DE API (Comentadas porque C# maneja esto en el puerto 5000) ---
 /*
@@ -37,35 +37,35 @@ console.log('⚠️ Las inscripciones y usuarios se manejan en el Backend C#');
 
 // Página Principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'index_GYM.html'));
+    res.sendFile(path.join(__dirname, 'src', 'public', 'index_GYM.html'));
     console.log('📄 Sirviendo Index_GYM');
 });
 
 // Panel Admin
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'admin-panel.html'));
+    res.sendFile(path.join(__dirname, 'src', 'public', 'admin-panel.html'));
 });
 
-// Páginas de confirmación de pago (Corregido: buscando en 'src')
+// Páginas de confirmación de pago (Corregido: buscando en 'src/public')
 app.get('/pago-exitoso', (req, res) => {
     console.log('✅ GET /pago-exitoso');
-    res.sendFile(path.join(__dirname, 'src', 'pago-exitoso.html'));
+    res.sendFile(path.join(__dirname, 'src', 'public', 'pago-exitoso.html'));
 });
 
 app.get('/pago-fallido', (req, res) => {
     console.log('❌ GET /pago-fallido');
-    res.sendFile(path.join(__dirname, 'src', 'pago-fallido.html'));
+    res.sendFile(path.join(__dirname, 'src', 'public', 'pago-fallido.html'));
 });
 
 app.get('/pago-pendiente', (req, res) => {
     console.log('⏳ GET /pago-pendiente');
-    res.sendFile(path.join(__dirname, 'src', 'pago-pendiente.html'));
+    res.sendFile(path.join(__dirname, 'src', 'public', 'pago-pendiente.html'));
 });
 
 // --- Endpoint para verificar reCAPTCHA v2 Checkbox ---
 app.post('/verify-captcha', async (req, res) => {
     const { token } = req.body;
-    const secretKey = process.env.RECAPTCHA_SECRET || '6LfDhDksAAAAAFTBXEvuFrS6CfGj4Esvx1MVPnCC'; // Prioridad a .env
+    const secretKey = process.env.RECAPTCHA_SECRET;
 
     console.log('🔐 [Node] Verificando token de reCAPTCHA...');
 

@@ -1,15 +1,17 @@
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace GymApi.Services
 {
     public class ReCaptchaService
     {
-        private readonly string _secretKey = "6LfDhDksAAAAAFTBXEvuFrS6CfGj4Esvx1MVPnCC";
+        private readonly string _secretKey;
         private readonly HttpClient _httpClient;
 
-        public ReCaptchaService(HttpClient httpClient)
+        public ReCaptchaService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _secretKey = configuration["ReCaptcha:SecretKey"] ?? Environment.GetEnvironmentVariable("RECAPTCHA_SECRET");
         }
 
         public async Task<bool> VerifyToken(string token)

@@ -1,49 +1,62 @@
-# Vitality Gym - Full Stack Application
+# 🏋️‍♂️ Vitality Gym - Full Stack Application
 
-Este es un proyecto Full Stack para la gestión de un gimnasio, incluyendo una landing page para usuarios y un panel administrativo para la gestión de inscripciones y miembros.
+Este es un proyecto Full Stack para la gestión de un gimnasio. Incluye una landing page rápida para los usuarios interesados y un panel administrativo para la gestión de inscripciones y miembros. El sistema está dividido en un Frontend estático proveído por Express, y un Backend robusto en ASP.NET Core.
 
 ## 🚀 Tecnologías
 
-### Backend (C#)
+### Backend (C# - ASP.NET Core 8.0)
 - ASP.NET Core Web API
 - Entity Framework Core
 - SQL Server
 
-### Backend (Node.js)
-- Express.js (Servidor de archivos estáticos y utilidades)
-- reCAPTCHA v2 Integration
-
-### Frontend
-- HTML5, CSS3 (Tailwind CSS)
+### Frontend & Utilities (Node.js)
+- Express.js (Servidor Frontend)
 - Vanilla JavaScript (ES Modules)
+- HTML5, CSS3 (Tailwind CSS)
 - Font Awesome
+- Integración de reCAPTCHA v2 de Google
 
 ## 🛠️ Estructura del Proyecto
 
-- `CSharp_Backend/`: API REST desarrollada en C#.
-- `src/`: Lógica del frontend y servidor Node.js.
-  - `js/`: Módulos de JavaScript (API, UI, Config, Forms).
-- `.env`: Variables de entorno del proyecto.
+El proyecto está organizado de la siguiente manera para un ambiente profesional de producción:
 
-## 🔧 Configuración
+- `CSharp_Backend/`: API REST desarrollada en C# (Lógica de negocio y Bases de datos).
+- `src/`: Carpeta base del Frontend y servidor Node.js.
+  - `public/`: Archivos públicos y estáticos (HTML, CSS, assets y JS orientados al cliente).
+  - `config/`: Archivos de configuración para NodeJS y cadenas de conexión si aplicase.
+  - `app.js`: Servidor Express.
+- `.env`: Variables de entorno de Node.js (ignorado por Git por seguridad).
+- `.env.example`: Plantilla de variables de entorno utilizables.
+- `.gitignore`: Configurado para ignorar dependencias y secretos locales.
 
-1. **Backend C#**: Configura la cadena de conexión en `appsettings.json` o mediante variables de entorno `ConnectionStrings__GymDb`.
-2. **Node.js**: Instala dependencias con `npm install` y configura el archivo `.env`.
-3. **Frontend**: Los módulos JS se encuentran en `src/js/` para facilitar su mantenimiento.
+## 🔧 Instalación y Despliegue
 
-## 📦 Despliegue en GitHub
+### 1. Configuración de Base de Datos y Secretos
 
-Para subir este proyecto a un nuevo repositorio:
+1. Copia o renombra `.env.example` a `.env` en la raíz del proyecto.
+2. Completa el archivo `.env` con las credenciales de tu base de datos, contraseñas y claves de reCAPTCHA.
+3. Asegurate de configurar tu cadena de conexión usando Variables de Entorno en el backend C#.
 
-```powershell
-git init
-git add .
-git commit -m "Initial commit: Project refactored and modularized"
-git remote add origin <URL_DE_TU_REPOSITORIO>
-git push -u origin main
-```
+### 2. Backend C#
 
-## 🔒 Seguridad
-- Secretos movidos a variables de entorno.
-- Modularización de lógica sensible.
-- Validación de reCAPTCHA implementada.
+Para compilar y correr la API localmente:
+- **Requisitos:** .NET SDK 8.0+ y SQL Server 2019+
+- Ubícate dentro de la carpeta `CSharp_Backend` (`cd CSharp_Backend`).
+- Restaura las dependencias: `dotnet restore`
+- Ejecuta la aplicación: `dotnet run` 
+
+El servidor debería iniciar en los puertos `5000` o `5001`.
+
+### 3. Frontend Node.js
+
+Para servir las vistas interactivas del sistema:
+- Mantente en la raíz del proyecto.
+- Ejecuta `npm install` para instalar dependencias de Express y Node.
+- Levanta el servidor con `npm start` o `node src/app.js`.
+
+## 📦 Buenas Prácticas y GitHub
+
+El proyecto está estructurado con las siguientes buenas prácticas para protegerlo durante subidas a repositorios públicos:
+- **Cero credenciales quemadas**: Todos los "secrets", strings de SQL y contraseñas de admin migrados a configuración local o `IConfiguration` en el Backend de C#.
+- **Estructura Pública**: Los archivos UI aislados y servidos directamente desde `src/public`.
+- Archivos `.log`, carpetas `.vs` o `node_modules` no se envían al control de fuentes.
