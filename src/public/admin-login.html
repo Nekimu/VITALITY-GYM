@@ -243,30 +243,38 @@
                 return;
             }
 
-            // Simple client-side validation (for development)
-            // En producción, esto debe validarse en el servidor
-            const adminUser = 'admin';
-            const adminPassword = '1234';
+            // La validación se realiza en el servidor contra variables de entorno
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
 
-            if (username === adminUser && password === adminPassword) {
-                // Save username if "Remember me" is checked
-                if (rememberMe) {
-                    localStorage.setItem('admin_username', username);
+                const data = await response.json().catch(() => ({}));
+
+                if (response.ok && data.success) {
+                    // Save username if "Remember me" is checked
+                    if (rememberMe) {
+                        localStorage.setItem('admin_username', username);
+                    } else {
+                        localStorage.removeItem('admin_username');
+                    }
+
+                    // Create session
+                    sessionStorage.setItem('admin_logged_in', 'true');
+                    sessionStorage.setItem('admin_user', username);
+                    sessionStorage.setItem('admin_session_time', new Date().getTime());
+
+                    // Redirect to admin panel
+                    window.location.href = 'admin-panel.html';
                 } else {
-                    localStorage.removeItem('admin_username');
+                    showError(data.message || 'Usuario o contraseña incorrectos');
+                    passwordField_form.value = '';
+                    passwordField_form.focus();
                 }
-
-                // Create session
-                sessionStorage.setItem('admin_logged_in', 'true');
-                sessionStorage.setItem('admin_user', username);
-                sessionStorage.setItem('admin_session_time', new Date().getTime());
-
-                // Redirect to admin panel
-                window.location.href = 'admin-panel.html';
-            } else {
-                showError('Usuario o contraseña incorrectos');
-                passwordField_form.value = '';
-                passwordField_form.focus();
+            } catch (error) {
+                showError('Error de conexión con el servidor');
             }
         });
 

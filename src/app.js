@@ -62,6 +62,27 @@ app.get('/pago-pendiente', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'public', 'pago-pendiente.html'));
 });
 
+// --- Endpoint de login de administrador (validación en servidor con variables de entorno) ---
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body || {};
+
+    const adminUser = process.env.ADMIN_USER;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminUser || !adminPassword) {
+        console.error('❌ ADMIN_USER / ADMIN_PASSWORD no configurados en el entorno');
+        return res.status(500).json({ success: false, message: 'Credenciales de administrador no configuradas en el servidor' });
+    }
+
+    if (username === adminUser && password === adminPassword) {
+        console.log('✅ Login de administrador exitoso');
+        return res.json({ success: true });
+    }
+
+    console.warn('❌ Intento de login de administrador fallido');
+    return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' });
+});
+
 // --- Endpoint para verificar reCAPTCHA v2 Checkbox ---
 app.post('/verify-captcha', async (req, res) => {
     const { token } = req.body;

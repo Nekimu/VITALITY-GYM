@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../connection.js"; // Asegúrate de que connection.js esté en src
+import { getConnection, sql } from "../config/connection.js";
 
 export const getProducts = async (req, res) => {
     try {

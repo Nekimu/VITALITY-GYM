@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../connection.js";
+import { getConnection, sql } from "../config/connection.js";
 
 export const getInscripciones = async (req, res) => {
   try {
